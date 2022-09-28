@@ -2,7 +2,7 @@
 using System.Data;
 using System.Text;
 
-string connectionString = "Server=localhost;Database=Library;Trusted_Connection=True;";
+string connectionString = "Server=localhost;Database=LibraryLab1;Trusted_Connection=True;";
 
 using LibraryDbContext dbContext = new(connectionString);
 var booksTable = dbContext.Books.AsEnumerable();

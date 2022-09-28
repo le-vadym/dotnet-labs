@@ -5,7 +5,6 @@ namespace Lab1.Data;
 
 internal class DbContext : IDisposable
 {
-	private bool _disposed;
 	private readonly SqlConnection _conn;
 
 	public SqlConnection Connection
@@ -28,12 +27,7 @@ internal class DbContext : IDisposable
 
 	public void Dispose()
 	{
-		if (_disposed)
-		{
-			return;
-		}
-
+		_conn.Close();
 		_conn.Dispose();
-		_disposed = true;
 	}
 }

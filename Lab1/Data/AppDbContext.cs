@@ -5,16 +5,18 @@ namespace Lab1.Data;
 
 internal sealed class LibraryDbContext : DbContext
 {
-    public DataTable Books => GetDataTable("SELECT * FROM Book;");
-    public DataTable Reader => GetDataTable("SELECT * FROM Reader;");
-    public DataTable Address => GetDataTable("SELECT * FROM Address;");
-    public DataTable BookBorrow => GetDataTable("SELECT * FROM BookBorrow;");
+    public DataTable Books => GetDataTable("Book");
+    public DataTable Reader => GetDataTable("Reader");
+    public DataTable Address => GetDataTable("Address");
+    public DataTable BookBorrow => GetDataTable("BookBorrow");
 
     public LibraryDbContext(string connectionString) : base(connectionString) { }
 
-    private DataTable GetDataTable(string query)
+    private DataTable GetDataTable(string tableName)
     {
-        SqlDataAdapter adapter = new(query, Connection);
+        SqlCommand command = new($"SELECT * FROM {tableName};", Connection);
+
+        SqlDataAdapter adapter = new(command);
         DataSet ds = new();
         adapter.Fill(ds);
 
