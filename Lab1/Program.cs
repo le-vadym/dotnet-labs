@@ -1,8 +1,10 @@
 ﻿using Lab1.Data;
+using Microsoft.Extensions.Configuration;
 using System.Data;
 using System.Text;
 
-string connectionString = "Server=localhost;Database=LibraryLab1;Trusted_Connection=True;";
+var configuration = new ConfigurationBuilder().AddJsonFile("appsettings.json", false, true).Build();
+string connectionString = configuration.GetConnectionString("DefaultConnection");
 
 using LibraryDbContext dbContext = new(connectionString);
 var booksTable = dbContext.Books.AsEnumerable();
