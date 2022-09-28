@@ -27,10 +27,7 @@ internal class DbContext : IDisposable
 
 	public void Dispose()
 	{
-<<<<<<< HEAD
 		_conn.Close();
-=======
->>>>>>> 6c14244c1452a56f1a7006d7a111d98e111e2581
 		_conn.Dispose();
 	}
 }
