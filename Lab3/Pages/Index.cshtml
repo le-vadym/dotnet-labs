@@ -1,0 +1,18 @@
+﻿@page
+@model Lab3.Pages.IndexModel
+<h1>Library</h1>
+@{
+    foreach (var bookBorrow in Model.BookBorrows.GroupBy(b => new { b.Reader.FirstName, b.Reader.LastName }))
+    {
+        <div>
+            <h2>@bookBorrow.Key.FirstName @bookBorrow.Key.LastName</h2>
+            <p>Has borrowed @bookBorrow.Count() book(s)</p>
+            <ul>
+                @foreach (var bookInfo in bookBorrow)
+                {
+                    <li>@bookInfo.Book.Name</li>
+                }
+            </ul>
+        </div>
+    }
+}
