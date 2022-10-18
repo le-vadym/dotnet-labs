@@ -40,15 +40,8 @@ public class GenericController<T> : Controller where T : ModelBase
     }
 
     [HttpPost]
-    [ValidateAntiForgeryToken]
     public virtual async Task<IActionResult> Create(T entity)
     {
-        if (!ModelState.IsValid)
-        {
-            return View(entity);
-        }
-
-        entity.Id = Guid.NewGuid();
         await _repository.CreateAsync(entity);
         return RedirectToAction(nameof(Index));
     }
@@ -69,17 +62,11 @@ public class GenericController<T> : Controller where T : ModelBase
     }
 
     [HttpPost]
-    [ValidateAntiForgeryToken]
     public virtual async Task<IActionResult> Edit(Guid id, T entity)
     {
         if (id != entity.Id)
         {
             return NotFound();
-        }
-
-        if (!ModelState.IsValid)
-        {
-            return View(entity);
         }
 
         try
@@ -98,19 +85,13 @@ public class GenericController<T> : Controller where T : ModelBase
 
     public virtual async Task<IActionResult> Delete(Guid? id)
     {
-        if (id == null || await _repository.ExistsAsync(id.Value))
+        if (id == null || !await _repository.ExistsAsync(id.Value))
         {
             return NotFound();
         }
 
-        return RedirectToAction(nameof(Index));
-    }
+        await _repository.DeleteAsync(id.Value);
 
-    [HttpPost, ActionName("Delete")]
-    [ValidateAntiForgeryToken]
-    public virtual async Task<IActionResult> DeleteConfirmed(Guid id)
-    {
-        await _repository.DeleteAsync(id);
         return RedirectToAction(nameof(Index));
     }
 }
