@@ -11,4 +11,5 @@ public interface IRepository<T> where T : ModelBase
     Task<T> CreateAsync(T entity);
     Task<T> UpdateAsync(Guid id, T entity);
     Task<bool> DeleteAsync(Guid id);
+    Task<bool> ExistsAsync(Guid id);
 }

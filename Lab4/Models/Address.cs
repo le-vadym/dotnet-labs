@@ -7,4 +7,6 @@ public sealed class Address : ModelBase
     public string City { get; set; } = null!;
     public string Street { get; set; } = null!;
     public int HouseNumber { get; set; }
+
+    public string Description => $"{Country}, {Region}, {City}, {Street}, {HouseNumber}";
 }
