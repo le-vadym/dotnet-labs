@@ -6,48 +6,53 @@ namespace Lab4.Repositories;
 
 public class GenericRepository<T> : IRepository<T> where T : ModelBase
 {
-    private readonly LibraryDbContext _context;
+    protected readonly LibraryDbContext Context;
 
-    public GenericRepository(LibraryDbContext context) => _context = context;
+    public GenericRepository(LibraryDbContext context) => Context = context;
 
-    public async Task<T> CreateAsync(T entity)
+    public virtual async Task<T> CreateAsync(T entity)
     {
-        var result = await _context.Set<T>().AddAsync(entity);
-        await _context.SaveChangesAsync();
+        var result = await Context.Set<T>().AddAsync(entity);
+        await Context.SaveChangesAsync();
 
         return result.Entity;
     }
 
-    public async Task<bool> DeleteAsync(Guid id)
+    public virtual async Task<bool> DeleteAsync(Guid id)
     {
-        var entity = await _context.Set<T>().FirstOrDefaultAsync(e => e.Id == id);
+        var entity = await Context.Set<T>().FirstOrDefaultAsync(e => e.Id == id);
         if (entity == null)
         {
             return false;
         }
-        _context.Set<T>().Remove(entity!);
-        await _context.SaveChangesAsync();
+        Context.Set<T>().Remove(entity!);
+        await Context.SaveChangesAsync();
 
         return true;
     }
 
-    public async Task<IEnumerable<T>> GetAllAsync()
+    public virtual async Task<bool> ExistsAsync(Guid id)
     {
-        return await _context.Set<T>().ToListAsync();
+        return await Context.Set<T>().AnyAsync(e => e.Id == id);
     }
 
-    public async Task<T> GetAsync(Guid id)
+    public virtual async Task<IEnumerable<T>> GetAllAsync()
     {
-        var entity = await _context.Set<T>().FirstOrDefaultAsync(e => e.Id == id);
+        return await Context.Set<T>().ToListAsync();
+    }
+
+    public virtual async Task<T> GetAsync(Guid id)
+    {
+        var entity = await Context.Set<T>().FirstOrDefaultAsync(e => e.Id == id);
 
         return entity!;
     }
 
-    public async Task<T> UpdateAsync(Guid id, T entity)
+    public virtual async Task<T> UpdateAsync(Guid id, T entity)
     {
         entity.Id = id;
-        var result = _context.Set<T>().Update(entity);
-        await _context.SaveChangesAsync();
+        var result = Context.Set<T>().Update(entity);
+        await Context.SaveChangesAsync();
 
         return result.Entity;
     }

@@ -1,4 +1,5 @@
 using Lab4.Data;
+using Lab4.Models;
 using Lab4.Repositories;
 using Microsoft.EntityFrameworkCore;
 
@@ -10,7 +11,9 @@ builder.Services.AddDbContext<LibraryDbContext>(options =>
 {
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
-builder.Services.AddSingleton(typeof(IRepository<>), typeof(GenericRepository<>));
+builder.Services.AddScoped(typeof(IRepository<>), typeof(GenericRepository<>));
+builder.Services.AddScoped<IRepository<Reader>, ReadersRepository>();
+builder.Services.AddScoped<IRepository<BookBorrow>, BookBorrowRepository>();
 
 var app = builder.Build();
 
