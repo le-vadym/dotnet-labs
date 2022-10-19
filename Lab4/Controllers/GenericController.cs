@@ -18,7 +18,7 @@ public class GenericController<T> : Controller where T : ModelBase
         return View(await _repository.GetAllAsync());
     }
 
-    public virtual async Task<IActionResult> Details(Guid? id)
+    public async Task<IActionResult> Details(Guid? id)
     {
         if (id == null)
         {
@@ -40,7 +40,7 @@ public class GenericController<T> : Controller where T : ModelBase
     }
 
     [HttpPost]
-    public virtual async Task<IActionResult> Create(T entity)
+    public async Task<IActionResult> Create(T entity)
     {
         await _repository.CreateAsync(entity);
         return RedirectToAction(nameof(Index));
@@ -62,7 +62,7 @@ public class GenericController<T> : Controller where T : ModelBase
     }
 
     [HttpPost]
-    public virtual async Task<IActionResult> Edit(Guid id, T entity)
+    public async Task<IActionResult> Edit(Guid id, T entity)
     {
         if (id != entity.Id)
         {
@@ -83,7 +83,7 @@ public class GenericController<T> : Controller where T : ModelBase
         return RedirectToAction(nameof(Index));
     }
 
-    public virtual async Task<IActionResult> Delete(Guid? id)
+    public async Task<IActionResult> Delete(Guid? id)
     {
         if (id == null || !await _repository.ExistsAsync(id.Value))
         {
