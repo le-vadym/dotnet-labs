@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace Lab4.Controllers;
 
-public class ReadersController : GenericController<Reader>
+public sealed class ReadersController : GenericController<Reader>
 {
     private readonly IRepository<Address> _addressRepository;
 

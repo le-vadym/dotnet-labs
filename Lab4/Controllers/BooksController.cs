@@ -3,7 +3,7 @@ using Lab4.Repositories;
 
 namespace Lab4.Controllers;
 
-public class BooksController : GenericController<Book>
+public sealed class BooksController : GenericController<Book>
 {
     public BooksController(IRepository<Book> repository) : base(repository) { }
 }

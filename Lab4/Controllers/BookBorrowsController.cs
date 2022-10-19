@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace Lab4.Controllers;
 
-public class BookBorrowsController : GenericController<BookBorrow>
+public sealed class BookBorrowsController : GenericController<BookBorrow>
 {
     private readonly IRepository<Reader> _readersRepository;
     private readonly IRepository<Book> _booksRepository;
