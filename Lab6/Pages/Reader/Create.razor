@@ -1,0 +1,63 @@
+﻿@page "/readers/create"
+
+<PageTitle>Create Reader</PageTitle>
+
+<h3>Create Reader</h3>
+
+<EditForm Model="_reader" OnValidSubmit="() => CreateAsync()">
+    <div class="form-group mb-3">
+        <label for="FirstName" class="mb-3">FirstName</label>
+        <InputText @bind-Value="_reader.FirstName" class="form-control" id="FirstName" />
+    </div>
+    <div class="form-group mb-3">
+        <label for="LastName" class="mb-1">LastName</label>
+        <InputText @bind-Value="_reader.LastName" class="form-control" id="LastName" />
+    </div>
+    <div class="form-group mb-3">
+        <label for="BirthDate" class="mb-1">BirthDate</label>
+        <InputDate @bind-Value="_reader.BirthDate" class="form-control" id="BirthDate" />
+    </div>
+    <div class="form-group mb-3">
+        <label for="PhoneNumber" class="mb-1">PhoneNumber</label>
+        <InputText @bind-Value="_reader.PhoneNumber" class="form-control" id="PhoneNumber" />
+    </div>
+    <div class="form-group mb-3">
+        <label for="AddressId" class="mb-1">Address</label>
+        <InputSelect @bind-Value="_reader.AddressId" class="form-control" id="AddressId">
+            @if (_addresses is not null) @foreach (var address in _addresses)
+            {
+                <option value="@address.Id">@address.Description</option>
+            }
+        </InputSelect>
+    </div>
+
+    <button class="btn btn-success" type="submit">Create</button>
+    <button @onclick="@(() => _navigationManager.NavigateTo("/readers", true))" class="btn btn-secondary">Cancel</button>
+
+</EditForm>
+
+@using Lab6.Repositories
+@inject NavigationManager _navigationManager;
+@inject IRepository<Models.Reader> _repository;
+@inject IRepository<Models.Address> _addressRepository;
+@code {
+    private Models.Reader _reader = new();
+    private IEnumerable<Models.Address> _addresses = default!;
+
+    protected override async Task OnInitializedAsync()
+    {
+        _addresses = await _addressRepository.GetAllAsync();
+    }
+
+    private async Task CreateAsync()
+    {
+        try
+        {
+            await _repository.CreateAsync(_reader);
+        }
+        finally
+        {
+            _navigationManager.NavigateTo("/readers");
+        }
+    }
+}
