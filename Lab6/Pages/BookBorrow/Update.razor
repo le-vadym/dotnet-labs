@@ -1,0 +1,78 @@
+﻿@page "/book_borrows/update/{Id:guid}"
+
+<PageTitle>Update Book Borrow</PageTitle>
+
+<EditForm Model="_bookBorrow" OnValidSubmit="() => UpdateAsync()">
+    <div class="form-group mb-3">
+        <label for="BorrowDate" class="mb-1">Borrow Date</label>
+        <InputDate @bind-Value="_bookBorrow.BorrowDate" class="form-control" id="BorrowDate" />
+    </div>
+    <div class="form-group mb-3">
+        <label for="ReturnDate" class="mb-1">Return Date</label>
+        <InputDate @bind-Value="_bookBorrow.ReturnDate" class="form-control" id="ReturnDate" />
+    </div>
+    <div class="form-group mb-3">
+        <label for="ReaderId" class="mb-1">Reader Id</label>
+        <InputSelect @bind-Value="_bookBorrow.ReaderId" class="form-control" id="ReaderId">
+            @if (_readers is not null) @foreach (var reader in _readers)
+                {
+                    <option value="@reader.Id">@reader.Description</option>
+                }
+        </InputSelect>
+    </div>
+    <div class="form-group mb-3">
+        <label for="BookId" class="mb-1">Book Id</label>
+        <InputSelect @bind-Value="_bookBorrow.BookId" class="form-control" id="BookId">
+            @if (_books is not null) @foreach (var book in _books)
+                {
+                    <option value="@book.Id">@book.Description</option>
+                }
+        </InputSelect>
+    </div>
+
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <button class="btn btn-success" type="submit">Update</button>
+    <button @onclick="@(() => _navigationManager.NavigateTo("/book_borrows", true))" class="btn btn-secondary">Cancel</button>
+
+</EditForm>
+
+@using Lab6.Repositories
+@inject NavigationManager _navigationManager;
+@inject IRepository<Models.Book> _bookRepository;
+@inject IRepository<Models.Reader> _readerRepository;
+@inject IRepository<Models.BookBorrow> _repository;
+@code {
+    [Parameter] public Guid Id { get; set; }
+
+    private Models.BookBorrow _bookBorrow = new();
+
+    private IEnumerable<Models.Book> _books = default!;
+    private IEnumerable<Models.Reader> _readers = default!;
+
+    protected override async Task OnInitializedAsync()
+    {
+        _books = await _bookRepository.GetAllAsync();
+        _readers = await _readerRepository.GetAllAsync();
+    }
+
+    protected override async Task OnParametersSetAsync()
+    {
+        _bookBorrow = await _repository.GetAsync(Id);
+    }
+
+    private async Task UpdateAsync()
+    {
+        try
+        {
+            _bookBorrow.Book = null;
+            _bookBorrow.Reader = null;
+            await _repository.UpdateAsync(_bookBorrow.Id, _bookBorrow);
+        }
+        finally
+        {
+            _navigationManager.NavigateTo("/book_borrows");
+        }
+    }
+}

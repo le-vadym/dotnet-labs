@@ -1,0 +1,67 @@
+﻿@page "/book_borrows"
+
+<PageTitle>Book Borrows</PageTitle>
+
+<h1>Index</h1>
+
+<p>
+    <a href="book_borrows/create" class="btn btn-success">Create New</a>
+</p>
+
+@if (_bookBorrows == default)
+{
+    <h1>Loading...</h1>
+    return;
+}
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Reader</th>
+            <th>Book</th>
+            <th>Borrow Date</th>
+            <th>Return Date</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+            @foreach (var bookBorrow in _bookBorrows)
+            {
+                <tr>
+                    <td>
+                        @bookBorrow.Reader.Description
+                    </td>
+                    <td>
+                        @bookBorrow.Book.Description
+                    </td>
+                    <td>
+                        @bookBorrow.BorrowDate
+                    </td>
+                    <td>
+                        @bookBorrow.ReturnDate
+                    </td>
+                    <td>
+                    <a href="book_borrows/update/@bookBorrow.Id" class="btn btn-warning m-10">Edit</a> |
+                        <button @onclick="() => DeleteAsync(bookBorrow)" class="btn btn-danger m-10">Delete</button>
+                    </td>
+                </tr>
+            }
+    </tbody>
+</table>
+
+@using Lab6.Repositories
+@inject IRepository<Models.BookBorrow> _repository;
+@code {
+    private IEnumerable<Models.BookBorrow> _bookBorrows = default!;
+
+    protected override async Task OnInitializedAsync()
+    {
+        _bookBorrows = await _repository.GetAllAsync();
+    }
+
+    private async Task DeleteAsync(Models.BookBorrow reader)
+    {
+        await _repository.DeleteAsync(reader.Id);
+        _bookBorrows = _bookBorrows.Where(b => b.Id != reader.Id);
+    }
+}
