@@ -53,8 +53,7 @@
     </tbody>
 </table>
 
-@using Services;
-@inject IDataService<Models.Reader> _service;
+@inject Services.IDataService<Models.Reader> _service;
 @code {
     private IEnumerable<Models.Reader> _readers = default!;
 
@@ -63,10 +62,9 @@
         _readers = await _service.GetAllAsync();
     }
 
-    private Task DeleteAsync(Models.Reader reader)
+    private async Task DeleteAsync(Models.Reader reader)
     {
-        throw new NotImplementedException();
-        //await _repository.DeleteAsync(reader.Id);
-        //_readers = _readers.Where(b => b.Id != reader.Id);
+        await _service.DeleteAsync(reader.Id);
+        _readers = _readers.Where(b => b.Id != reader.Id);
     }
 }

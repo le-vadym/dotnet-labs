@@ -53,8 +53,7 @@
     </tbody>
 </table>
 
-@using Services;
-@inject IDataService<Models.Address> _service;
+@inject Services.IDataService<Models.Address> _service;
 @code {
     private IEnumerable<Models.Address> _addresses = default!;
 
@@ -63,10 +62,9 @@
         _addresses = await _service.GetAllAsync();
     }
 
-    private Task DeleteAsync(Models.Address address)
+    private async Task DeleteAsync(Models.Address address)
     {
-        throw new NotImplementedException();
-        //await _repository.DeleteAsync(address.Id);
-        //_addresses = _addresses.Where(b => b.Id != address.Id);
+        await _service.DeleteAsync(address.Id);
+        _addresses = _addresses.Where(b => b.Id != address.Id);
     }
 }

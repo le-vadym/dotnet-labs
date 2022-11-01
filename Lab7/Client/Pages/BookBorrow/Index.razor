@@ -59,10 +59,9 @@
         _bookBorrows = await _service.GetAllAsync();
     }
 
-    private Task DeleteAsync(Models.BookBorrow reader)
+    private async Task DeleteAsync(Models.BookBorrow reader)
     {
-        throw new NotImplementedException();
-        //await _repository.DeleteAsync(reader.Id);
-        //_bookBorrows = _bookBorrows.Where(b => b.Id != reader.Id);
+        await _service.DeleteAsync(reader.Id);
+        _bookBorrows = _bookBorrows.Where(b => b.Id != reader.Id);
     }
 }

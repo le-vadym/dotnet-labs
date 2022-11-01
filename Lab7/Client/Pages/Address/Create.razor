@@ -32,19 +32,23 @@
 </EditForm>
 
 @inject NavigationManager _navigationManager;
+@inject Services.IDataService<Models.Address> _service;
 @code {
     private Models.Address _address = new();
 
-    private Task CreateAsync()
+    private async Task CreateAsync()
     {
-        throw new NotImplementedException();
-        //try
-        //{
-        //    await _repository.CreateAsync(_address);
-        //}
-        //finally
-        //{
-        //    _navigationManager.NavigateTo("/addresses");
-        //}
+        try
+        {
+            await _service.CreateAsync(_address);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.Message);
+        }
+        finally
+        {
+            _navigationManager.NavigateTo("/addresses");
+        }
     }
 }

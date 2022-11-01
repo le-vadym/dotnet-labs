@@ -39,26 +39,35 @@
 
 
 @inject NavigationManager _navigationManager;
+@inject Services.IDataService<Models.Book> _bookService;
+@inject Services.IDataService<Models.Reader> _readerService;
+@inject Services.IDataService<Models.BookBorrow> _service;
 @code {
     private Models.BookBorrow _bookBorrow = new();
     private IEnumerable<Models.Book> _books = default!;
     private IEnumerable<Models.Reader> _readers = default!;
 
-    protected override Task OnInitializedAsync()
+    protected override async Task OnInitializedAsync()
     {
-        throw new NotImplementedException();
+        _books = await _bookService.GetAllAsync();
+        _readers = await _readerService.GetAllAsync();
     }
 
-    private Task CreateAsync()
+    private async Task CreateAsync()
     {
-        throw new NotImplementedException();
-        //try
-        //{
-        //    await _repository.CreateAsync(_bookBorrow);
-        //}
-        //finally
-        //{
-        //    _navigationManager.NavigateTo("/book_borrows");
-        //}
+        try
+        {
+            _bookBorrow.Book = await _bookService.GetAsync(_bookBorrow.BookId);
+            _bookBorrow.Reader = await _readerService.GetAsync(_bookBorrow.ReaderId);
+            await _service.CreateAsync(_bookBorrow);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.Message);
+        }
+        finally
+        {
+            _navigationManager.NavigateTo("/book_borrows");
+        }
     }
 }

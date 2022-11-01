@@ -45,8 +45,7 @@
     </tbody>
 </table>
 
-@using Services;
-@inject IDataService<Models.Book> _service;
+@inject Services.IDataService<Models.Book> _service;
 @code {
     private IEnumerable<Models.Book> _books = default!;
 

@@ -38,6 +38,8 @@
 </EditForm>
 
 @inject NavigationManager _navigationManager;
+@inject Services.IDataService<Models.Reader> _service;
+@inject Services.IDataService<Models.Address> _addressService;
 @code {
     [Parameter] public Guid Id { get; set; }
 
@@ -51,28 +53,29 @@
 
     private IEnumerable<Models.Address> _addresses = default!;
 
-    protected override Task OnInitializedAsync()
+    protected override async Task OnInitializedAsync()
     {
-        throw new NotImplementedException();
-        //_addresses = await _addressRepository.GetAllAsync();
+        _addresses = await _addressService.GetAllAsync();
     }
-    protected override Task OnParametersSetAsync()
+    protected override async Task OnParametersSetAsync()
     {
-        throw new NotImplementedException();
-        //_reader = await _repository.GetAsync(Id);
+        _reader = await _service.GetAsync(Id);
     }
 
-    private Task UpdateAsync()
+    private async Task UpdateAsync()
     {
-        throw new NotImplementedException();
-        //try
-        //{
-        //    _reader.Address = null;
-        //    await _repository.UpdateAsync(_reader.Id, _reader);
-        //}
-        //finally
-        //{
-        //    _navigationManager.NavigateTo("/readers");
-        //}
+        try
+        {
+            _reader.Address = await _addressService.GetAsync(_reader.AddressId);
+            await _service.UpdateAsync(_reader.Id, _reader);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.Message);
+        }
+        finally
+        {
+            _navigationManager.NavigateTo("/readers");
+        }
     }
 }

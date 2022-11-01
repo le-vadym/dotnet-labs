@@ -24,8 +24,7 @@
 
 </EditForm>
 
-@using Services;
-@inject IDataService<Models.Book> _service;
+@inject Services.IDataService<Models.Book> _service;
 @inject NavigationManager _navigationManager;
 @code {
     [Parameter] public Guid Id { get; set; }
