@@ -1,0 +1,72 @@
+﻿@page "/readers"
+
+<PageTitle>Readers</PageTitle>
+
+<h1>Index</h1>
+
+<p>
+    <a href="readers/create" class="btn btn-success">Create New</a>
+</p>
+
+@if (_readers == default)
+{
+    <h1>Loading...</h1>
+    return;
+}
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>First Name</th>
+            <th>Last Name</th>
+            <th>Birth Date</th>
+            <th>Phone Number</th>
+            <th>Address</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+            @foreach (var reader in _readers)
+            {
+                <tr>
+                    <td>
+                        @reader.FirstName
+                    </td>
+                    <td>
+                        @reader.LastName
+                    </td>
+                    <td>
+                        @reader.BirthDate
+                    </td>
+                    <td>
+                        @reader.PhoneNumber
+                    </td>
+                    <td>
+                        @reader.Address.Description
+                    </td>
+                    <td>
+                    <a href="readers/update/@reader.Id" class="btn btn-warning m-10">Edit</a> |
+                        <button @onclick="() => DeleteAsync(reader)" class="btn btn-danger m-10">Delete</button>
+                    </td>
+                </tr>
+            }
+    </tbody>
+</table>
+
+@using Services;
+@inject IDataService<Models.Reader> _service;
+@code {
+    private IEnumerable<Models.Reader> _readers = default!;
+
+    protected override async Task OnInitializedAsync()
+    {
+        _readers = await _service.GetAllAsync();
+    }
+
+    private Task DeleteAsync(Models.Reader reader)
+    {
+        throw new NotImplementedException();
+        //await _repository.DeleteAsync(reader.Id);
+        //_readers = _readers.Where(b => b.Id != reader.Id);
+    }
+}

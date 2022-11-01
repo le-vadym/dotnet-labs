@@ -1,0 +1,64 @@
+﻿@page "/book_borrows/create"
+
+<PageTitle>Create Book Borrow</PageTitle>
+
+<h3>Create Book Borrow</h3>
+
+<EditForm Model="_bookBorrow" OnValidSubmit="() => CreateAsync()">
+    <div class="form-group mb-3">
+        <label for="BorrowDate" class="mb-1">Borrow Date</label>
+        <InputDate @bind-Value="_bookBorrow.BorrowDate" class="form-control" id="BorrowDate" />
+    </div>
+    <div class="form-group mb-3">
+        <label for="ReturnDate" class="mb-1">Return Date</label>
+        <InputDate @bind-Value="_bookBorrow.ReturnDate" class="form-control" id="ReturnDate" />
+    </div>
+    <div class="form-group mb-3">
+        <label for="ReaderId" class="mb-1">Reader Id</label>
+        <InputSelect @bind-Value="_bookBorrow.ReaderId" class="form-control" id="ReaderId">
+            @if (_readers is not null) @foreach (var reader in _readers)
+            {
+                <option value="@reader.Id">@reader.Description</option>
+            }
+        </InputSelect>
+    </div>
+    <div class="form-group mb-3">
+        <label for="BookId" class="mb-1">Book Id</label>
+        <InputSelect @bind-Value="_bookBorrow.BookId" class="form-control" id="BookId">
+            @if (_books is not null) @foreach (var book in _books)
+            {
+                <option value="@book.Id">@book.Description</option>
+            }
+        </InputSelect>
+    </div>
+
+    <button class="btn btn-success" type="submit">Create</button>
+    <button @onclick="@(() => _navigationManager.NavigateTo("/book_borrows", true))" class="btn btn-secondary">Cancel</button>
+
+</EditForm>
+
+
+@inject NavigationManager _navigationManager;
+@code {
+    private Models.BookBorrow _bookBorrow = new();
+    private IEnumerable<Models.Book> _books = default!;
+    private IEnumerable<Models.Reader> _readers = default!;
+
+    protected override Task OnInitializedAsync()
+    {
+        throw new NotImplementedException();
+    }
+
+    private Task CreateAsync()
+    {
+        throw new NotImplementedException();
+        //try
+        //{
+        //    await _repository.CreateAsync(_bookBorrow);
+        //}
+        //finally
+        //{
+        //    _navigationManager.NavigateTo("/book_borrows");
+        //}
+    }
+}

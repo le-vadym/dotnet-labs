@@ -1,0 +1,66 @@
+﻿@page "/addresses/update/{Id:guid}"
+
+<PageTitle>Create Address</PageTitle>
+
+<h3>Create Address</h3>
+
+<EditForm Model="_address" OnValidSubmit="() => UpdateAsync()">
+    <div class="form-group mb-3">
+        <label for="country" class="mb-3">Country</label>
+        <InputText @bind-Value="_address.Country" class="form-control" id="country" />
+    </div>
+    <div class="form-group mb-3">
+        <label for="city" class="mb-3">City</label>
+        <InputText @bind-Value="_address.City" class="form-control" id="city" />
+    </div>
+    <div class="form-group mb-3">
+        <label for="region" class="mb-3">Region</label>
+        <InputText @bind-Value="_address.Region" class="form-control" id="region" />
+    </div>
+    <div class="form-group mb-3">
+        <label for="street" class="mb-3">Street</label>
+        <InputText @bind-Value="_address.Street" class="form-control" id="street" />
+    </div>
+    <div class="form-group mb-3">
+        <label for="houseNumber" class="mb-3">HouseNumber</label>
+        <InputNumber @bind-Value="_address.HouseNumber" class="form-control" id="houseNumber" />
+    </div>
+
+    <button class="btn btn-success" type="submit">Create</button>
+    <button @onclick="@(() => _navigationManager.NavigateTo("/addresses", true))" class="btn btn-secondary">Cancel</button>
+
+</EditForm>
+
+
+@inject NavigationManager _navigationManager;
+@code {
+    [Parameter] public Guid Id { get; set; }
+
+    private Models.Address _address = new()
+        {
+            Country = "",
+            Region = "",
+            City = "",
+            Street = "",
+            HouseNumber = 0
+        };
+
+    protected override Task OnParametersSetAsync()
+    {
+        throw new NotImplementedException();
+        //_address = await _repository.GetAsync(Id);
+    }
+
+    private Task UpdateAsync()
+    {
+        throw new NotImplementedException();
+        //try
+        //{
+        //    await _repository.UpdateAsync(_address.Id, _address);
+        //}
+        //finally
+        //{
+        //    _navigationManager.NavigateTo("/addresses");
+        //}
+    }
+}
