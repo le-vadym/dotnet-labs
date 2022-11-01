@@ -14,19 +14,21 @@
     <div class="form-group mb-3">
         <label for="ReaderId" class="mb-1">Reader Id</label>
         <InputSelect @bind-Value="_bookBorrow.ReaderId" class="form-control" id="ReaderId">
+            <option value="@Guid.Empty" disabled>Select Reader</option>
             @if (_readers is not null) @foreach (var reader in _readers)
-                {
-                    <option value="@reader.Id">@reader.Description</option>
-                }
+            {
+                <option value="@reader.Id">@reader.Description</option>
+            }
         </InputSelect>
     </div>
     <div class="form-group mb-3">
         <label for="BookId" class="mb-1">Book Id</label>
         <InputSelect @bind-Value="_bookBorrow.BookId" class="form-control" id="BookId">
+            <option value="@Guid.Empty" disabled>Select Book</option>
             @if (_books is not null) @foreach (var book in _books)
-                {
-                    <option value="@book.Id">@book.Description</option>
-                }
+            {
+                <option value="@book.Id">@book.Description</option>
+            }
         </InputSelect>
     </div>
 

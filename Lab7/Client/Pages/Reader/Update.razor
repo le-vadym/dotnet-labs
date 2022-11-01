@@ -22,6 +22,7 @@
     <div class="form-group mb-3">
         <label for="AddressId" class="mb-1">Address</label>
         <InputSelect @bind-Value="_reader.AddressId" class="form-control" id="AddressId">
+            <option value="@Guid.Empty" disabled>Select Address</option>
             @if (_addresses is not null) @foreach (var address in _addresses)
             {
                 <option value="@address.Id">@address.Description</option>

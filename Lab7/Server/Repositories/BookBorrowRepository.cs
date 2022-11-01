@@ -27,4 +27,34 @@ public class BookBorrowRepository : GenericRepository<BookBorrow>
 
         return entity!;
     }
+
+    public override async Task<BookBorrow> CreateAsync(BookBorrow entity)
+    {
+        entity.Book = null;
+        entity.Reader = null;
+        return await base.CreateAsync(entity);
+    }
+
+    public override async Task<BookBorrow> UpdateAsync(Guid id, BookBorrow entity)
+    {
+        entity.Book = null;
+        entity.Reader = null;
+        return await base.UpdateAsync(id, entity);
+    }
+
+    public override async Task<bool> DeleteAsync(Guid id)
+    {
+        var entity = await Context.Set<BookBorrow>().FirstOrDefaultAsync(e => e.Id == id);
+        if (entity == null)
+        {
+            return false;
+        }
+
+        entity.BookId = Guid.Empty;
+        entity.ReaderId = Guid.Empty;
+        Context.Set<BookBorrow>().Remove(entity!);
+        await Context.SaveChangesAsync();
+
+        return true;
+    }
 }

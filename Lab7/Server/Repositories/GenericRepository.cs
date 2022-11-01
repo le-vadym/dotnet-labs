@@ -55,7 +55,13 @@ public class GenericRepository<T> : IRepository<T> where T : ModelBase
     public virtual async Task<T> UpdateAsync(Guid id, T entity)
     {
         entity.Id = id;
-        Context.Set<T>().Update(entity);
+
+        var local = Context.Set<T>().Local.FirstOrDefault(entity => entity.Id == id);
+        if (local != null)
+        {
+            Context.Entry(local).State = EntityState.Detached;
+        }
+        Context.Entry(entity).State = EntityState.Modified;
         await Context.SaveChangesAsync();
 
         return await GetAsync(id);
