@@ -1,0 +1,43 @@
+﻿@page "/books/create"
+
+<PageTitle>Create Book</PageTitle>
+
+<h3>Create Book</h3>
+
+<EditForm Model="_book" OnValidSubmit="() => CreateAsync()">
+    <div class="form-group mb-3">
+        <label for="bookName" class="mb-3">Name</label>
+        <InputText @bind-Value="_book.Name" class="form-control" id="bookName" />
+    </div>
+    <div class="form-group mb-3">
+        <label for="bookAuthor" class="mb-1">Author</label>
+        <InputText @bind-Value="_book.Author" class="form-control" id="bookAuthor" />
+    </div>
+    <div class="form-group mb-3">
+        <label for="bookPrice" class="mb-1">Price</label>
+        <InputNumber @bind-Value="_book.Price" class="form-control" id="bookPrice" />
+    </div>
+
+    <button class="btn btn-success" type="submit">Create</button>
+    <button @onclick="@(() => _navigationManager.NavigateTo("/books", true))" class="btn btn-secondary">Cancel</button>
+
+</EditForm>
+
+@using Services;
+@inject IDataService<Models.Book> _service;
+@inject NavigationManager _navigationManager;
+@code {
+    private Models.Book _book = new();
+
+    private async Task CreateAsync()
+    {
+        try
+        {
+            await _service.CreateAsync(_book);
+        }
+        finally
+        {
+            _navigationManager.NavigateTo("/books");
+        }
+    }
+}

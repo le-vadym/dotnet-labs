@@ -1,0 +1,54 @@
+﻿@page "/addresses/create"
+
+<PageTitle>Create Address</PageTitle>
+
+<h3>Create Address</h3>
+
+<EditForm Model="_address" OnValidSubmit="() => CreateAsync()">
+    <div class="form-group mb-3">
+        <label for="country" class="mb-1">Country</label>
+        <InputText @bind-Value="_address.Country" class="form-control" id="country" />
+    </div>
+    <div class="form-group mb-3">
+        <label for="city" class="mb-1">City</label>
+        <InputText @bind-Value="_address.City" class="form-control" id="city" />
+    </div>
+    <div class="form-group mb-3">
+        <label for="region" class="mb-1">Region</label>
+        <InputText @bind-Value="_address.Region" class="form-control" id="region" />
+    </div>
+    <div class="form-group mb-3">
+        <label for="street" class="mb-1">Street</label>
+        <InputText @bind-Value="_address.Street" class="form-control" id="street" />
+    </div>
+    <div class="form-group mb-3">
+        <label for="houseNumber" class="mb-1">HouseNumber</label>
+        <InputNumber @bind-Value="_address.HouseNumber" class="form-control" id="houseNumber" />
+    </div>
+
+    <button class="btn btn-success" type="submit">Create</button>
+    <button @onclick="@(() => _navigationManager.NavigateTo("/addresses", true))" class="btn btn-secondary">Cancel</button>
+
+</EditForm>
+
+@inject NavigationManager _navigationManager;
+@inject Services.IDataService<Models.Address> _service;
+@code {
+    private Models.Address _address = new();
+
+    private async Task CreateAsync()
+    {
+        try
+        {
+            await _service.CreateAsync(_address);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.Message);
+        }
+        finally
+        {
+            _navigationManager.NavigateTo("/addresses");
+        }
+    }
+}

@@ -1,0 +1,62 @@
+﻿@page "/books"
+
+<PageTitle>Books</PageTitle>
+
+<h1>Index</h1>
+
+<p>
+    <a href="books/create" class="btn btn-success">Create New</a>
+</p>
+
+@if (_books == default)
+{
+    <h1>Loading...</h1>
+    return;
+}
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Author</th>
+            <th>Price</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+            @foreach (var book in _books)
+            {
+                <tr>
+                    <td>
+                        @book.Name
+                    </td>
+                    <td>
+                        @book.Author
+                    </td>
+                    <td>
+                        @book.Price
+                    </td>
+                    <td>
+                        <a href="books/update/@book.Id" class="btn btn-warning m-10">Edit</a> |
+                        <button @onclick="() => DeleteAsync(book)" class="btn btn-danger m-10">Delete</button>
+                    </td>
+                </tr>
+            }
+    </tbody>
+</table>
+
+@inject Services.IDataService<Models.Book> _service;
+@code {
+    private IEnumerable<Models.Book> _books = default!;
+
+    protected override async Task OnInitializedAsync()
+    {
+        _books = await _service.GetAllAsync();
+    }
+
+    private async Task DeleteAsync(Models.Book book)
+    {
+        await _service.DeleteAsync(book.Id);
+        _books = _books.Where(b => b.Id != book.Id);
+    }
+}

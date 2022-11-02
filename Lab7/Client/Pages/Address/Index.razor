@@ -1,0 +1,70 @@
+﻿@page "/addresses"
+
+<PageTitle>Addresses</PageTitle>
+
+<h1>Index</h1>
+
+<p>
+    <a href="addresses/create" class="btn btn-success">Create New</a>
+</p>
+
+@if (_addresses == default)
+{
+    <h1>Loading...</h1>
+    return;
+}
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Country</th>
+            <th>City</th>
+            <th>Region</th>
+            <th>Street</th>
+            <th>HouseNumber</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var book in _addresses)
+        {
+            <tr>
+                <td>
+                    @book.Country
+                </td>
+                <td>
+                    @book.City
+                </td>
+                <td>
+                    @book.Region
+                </td>
+                <td>
+                    @book.Street
+                </td>
+                <td>
+                    @book.HouseNumber
+                </td>
+                <td>
+                    <a href="addresses/update/@book.Id" class="btn btn-warning m-10">Edit</a> |
+                    <button @onclick="() => DeleteAsync(book)" class="btn btn-danger m-10">Delete</button>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@inject Services.IDataService<Models.Address> _service;
+@code {
+    private IEnumerable<Models.Address> _addresses = default!;
+
+    protected override async Task OnInitializedAsync()
+    {
+        _addresses = await _service.GetAllAsync();
+    }
+
+    private async Task DeleteAsync(Models.Address address)
+    {
+        await _service.DeleteAsync(address.Id);
+        _addresses = _addresses.Where(b => b.Id != address.Id);
+    }
+}

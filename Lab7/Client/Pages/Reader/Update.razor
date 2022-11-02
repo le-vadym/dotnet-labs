@@ -1,0 +1,82 @@
+﻿@page "/readers/update/{Id:guid}"
+
+<PageTitle>Update Book</PageTitle>
+
+<EditForm Model="_reader" OnValidSubmit="() => UpdateAsync()">
+    <div class="form-group mb-3">
+        <label for="FirstName" class="mb-3">FirstName</label>
+        <InputText @bind-Value="_reader.FirstName" class="form-control" id="FirstName" />
+    </div>
+    <div class="form-group mb-3">
+        <label for="LastName" class="mb-1">LastName</label>
+        <InputText @bind-Value="_reader.LastName" class="form-control" id="LastName" />
+    </div>
+    <div class="form-group mb-3">
+        <label for="BirthDate" class="mb-1">BirthDate</label>
+        <InputDate @bind-Value="_reader.BirthDate" class="form-control" id="BirthDate" />
+    </div>
+    <div class="form-group mb-3">
+        <label for="PhoneNumber" class="mb-1">PhoneNumber</label>
+        <InputText @bind-Value="_reader.PhoneNumber" class="form-control" id="PhoneNumber" />
+    </div>
+    <div class="form-group mb-3">
+        <label for="AddressId" class="mb-1">Address</label>
+        <InputSelect @bind-Value="_reader.AddressId" class="form-control" id="AddressId">
+            <option value="@Guid.Empty" disabled>Select Address</option>
+            @if (_addresses is not null) @foreach (var address in _addresses)
+            {
+                <option value="@address.Id">@address.Description</option>
+            }
+        </InputSelect>
+    </div>
+
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <button class="btn btn-success" type="submit">Update</button>
+    <button @onclick="@(() => _navigationManager.NavigateTo("/readers", true))" class="btn btn-secondary">Cancel</button>
+
+</EditForm>
+
+@inject NavigationManager _navigationManager;
+@inject Services.IDataService<Models.Reader> _service;
+@inject Services.IDataService<Models.Address> _addressService;
+@code {
+    [Parameter] public Guid Id { get; set; }
+
+    private Models.Reader _reader = new()
+        {
+            FirstName = "",
+            LastName = "",
+            PhoneNumber = "",
+            BirthDate = DateTime.Now
+        };
+
+    private IEnumerable<Models.Address> _addresses = default!;
+
+    protected override async Task OnInitializedAsync()
+    {
+        _addresses = await _addressService.GetAllAsync();
+    }
+    protected override async Task OnParametersSetAsync()
+    {
+        _reader = await _service.GetAsync(Id);
+    }
+
+    private async Task UpdateAsync()
+    {
+        try
+        {
+            _reader.Address = await _addressService.GetAsync(_reader.AddressId);
+            await _service.UpdateAsync(_reader.Id, _reader);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.Message);
+        }
+        finally
+        {
+            _navigationManager.NavigateTo("/readers");
+        }
+    }
+}
