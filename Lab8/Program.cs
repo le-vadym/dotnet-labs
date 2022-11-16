@@ -14,6 +14,16 @@ builder.Services.AddScoped(typeof(IRepository<>), typeof(GenericRepository<>));
 builder.Services.AddScoped<IRepository<Reader>, ReadersRepository>();
 builder.Services.AddScoped<IRepository<BookBorrow>, BookBorrowRepository>();
 
+string corsPolicy = "CorsPolicy";
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy(corsPolicy, policy =>
+    {
+        policy.AllowAnyHeader().AllowAnyMethod().WithOrigins("https://localhost:44463/");
+    });
+});
+
+
 var app = builder.Build();
 
 if (!app.Environment.IsDevelopment())
@@ -24,7 +34,7 @@ if (!app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseRouting();
-
+app.UseCors(corsPolicy);
 
 app.MapControllerRoute(
     name: "default",
